@@ -21,19 +21,6 @@ from app.api.reviews import router as reviews_router
 # PROJECT DIRECTORIES
 # ============================================================
 
-# main.py location:
-# backend/app/main.py
-#
-# parents:
-# [0] -> backend/app
-# [1] -> backend
-# [2] -> project root
-#
-# Therefore:
-# PROJECT_ROOT / "deep-learning"
-# points to:
-# project-root/deep-learning
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 DEEP_LEARNING_DIR = PROJECT_ROOT / "deep-learning"
@@ -46,9 +33,6 @@ LESION_DIR = DEEP_LEARNING_DIR / "outputs" / "lesion_evidence"
 # ============================================================
 # CREATE REQUIRED DIRECTORIES
 # ============================================================
-
-# Render/Linux will fail if StaticFiles points to a directory
-# that does not exist. Create them automatically.
 
 GRADCAM_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -65,10 +49,7 @@ async def lifespan(app: FastAPI):
     # Connect to MongoDB
     await connect_to_mongodb()
 
-    # --------------------------------------------------------
     # MongoDB indexes
-    # --------------------------------------------------------
-
     await db.users.create_index(
         "email",
         unique=True
@@ -96,10 +77,9 @@ async def lifespan(app: FastAPI):
         "created_at"
     )
 
-    # Application is running
     yield
 
-    # Close MongoDB connection when application shuts down
+    # Close MongoDB connection
     await close_mongodb()
 
 
@@ -116,30 +96,22 @@ app = FastAPI(
 
 
 # ============================================================
-# CORS
+# CORS CONFIGURATION
 # ============================================================
 
 app.add_middleware(
     CORSMiddleware,
 
     allow_origins=[
-        # Local Vite development
+        # Local development
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-
-        # Other local frontend ports
         "http://localhost:3000",
         "http://localhost:5174",
 
-        # ----------------------------------------------------
-        # ADD YOUR VERCEL FRONTEND URL HERE
-        # Example:
-        # "https://retina-xai.vercel.app",
-        # ----------------------------------------------------
+        # Production Vercel frontend
+        "https://diabetic-retinopathy-screening-drab.vercel.app",
     ],
-
-    # Allow localhost with any port
-    allow_origin_regex=r"http://(localhost|127\.0\.0\.1)(:\d+)?",
 
     allow_credentials=True,
 
@@ -172,15 +144,12 @@ app.include_router(reviews_router)
 # STATIC FILES
 # ============================================================
 
-# Grad-CAM result images
 app.mount(
     "/results/gradcam",
     StaticFiles(directory=str(GRADCAM_DIR)),
     name="gradcam",
 )
 
-
-# Lesion evidence images
 app.mount(
     "/results/lesion",
     StaticFiles(directory=str(LESION_DIR)),
@@ -194,6 +163,7 @@ app.mount(
 
 @app.get("/")
 async def root():
+
     return {
         "message": "RETINA-XAI API is running",
         "version": "2.0.0",
