@@ -1,0 +1,124 @@
+# ============================================================
+# RETINA-XAI - .gitignore
+# ============================================================
+
+
+# -------------------- Python --------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+
+# -------------------- Virtual Environments --------------------
+venv/
+.venv/
+env/
+ENV/
+retina-xai/
+
+
+# -------------------- Jupyter --------------------
+.ipynb_checkpoints/
+
+
+# -------------------- Environment / Secrets --------------------
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+
+# -------------------- Dataset --------------------
+Disease Dataset/
+dataset/
+datasets/
+data/
+
+
+# -------------------- Deep Learning Models --------------------
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.h5
+*.keras
+
+deep-learning/models/
+
+
+# -------------------- AI Generated Outputs --------------------
+outputs/
+deep-learning/outputs/
+
+# Grad-CAM
+**/outputs/gradcam/
+
+# Segmentation / Lesion Evidence
+**/outputs/segmentation_v2/
+**/outputs/lesion_evidence/
+
+
+# -------------------- API Uploads --------------------
+api/uploads/*
+!api/uploads/.gitkeep
+
+
+# -------------------- Node / React --------------------
+node_modules/
+frontend/node_modules/
+
+dist/
+build/
+.vite/
+
+
+# -------------------- Logs --------------------
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# -------------------- IDE --------------------
+.vscode/
+.idea/
+
+
+# -------------------- OS --------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# -------------------- Temporary Files --------------------
+*.tmp
+*.temp
+*.swp
+*.bak
+~$*
+
+
+# -------------------- Coverage --------------------
+coverage/
+.nyc_output/
+
+
+# -------------------- Python Build --------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+
+
+# -------------------- Local DB --------------------
+*.sqlite
+*.sqlite3
