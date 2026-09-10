@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import os
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -99,19 +100,27 @@ app = FastAPI(
 # CORS CONFIGURATION
 # ============================================================
 
+configured_origins = {
+    origin.strip().rstrip("/")
+    for origin in os.getenv("CORS_ORIGINS", "").split(",")
+    if origin.strip()
+}
+configured_origins.update({
+    # Local development
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "http://localhost:5174",
+
+    # Production Vercel frontend
+    "https://diabetic-retinopathy-screening-drab.vercel.app",
+})
+
 app.add_middleware(
     CORSMiddleware,
 
-    allow_origins=[
-        # Local development
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "http://localhost:5174",
-
-        # Production Vercel frontend
-        "https://diabetic-retinopathy-screening-drab.vercel.app",
-    ],
+    allow_origins=sorted(configured_origins),
+    allow_origin_regex=r"https://[a-z0-9-]+\.vercel\.app",
 
     allow_credentials=True,
 
